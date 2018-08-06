@@ -115,7 +115,8 @@ FROM (SELECT a.id, a.name, SUM(o.total_amt_usd) total_amt_usd
 	ORDER BY 3 DESC) t1
 LIMIT 10;
 
-/* What is the lifetime average amount spent in terms of total_amt_usd for only the companies that spent more than the average of all orders.*/
+/* What is the lifetime average amount spent in terms of total_amt_usd for only the companies
+that spent more than the average of all orders.*/
 /* 1. Find the average for all orders 
    2. Find all accounts that spent more than the average in 1 above => t1
    3. Find the average of this average

@@ -192,7 +192,8 @@ HAVING - Expert Tip
 HAVING is the “clean” way to filter a query that has been aggregated, but this is also commonly done using a subquery. Essentially, any time you want to perform a WHERE on an element of your query that was created by an aggregate, you need to use HAVING instead.
 
 
-8. DATE
+8. 
+SQL_DATE formt => yyyy-mm-dd
 GROUPing BY a date column is not usually very useful in SQL, as these columns tend to have transaction data down to a second. Keeping date information at such a granular data is both a blessing and a curse, as it gives really precise information (a blessing), but it makes grouping information together directly difficult (a curse).
 
 Lucky for us, there are a number of built in SQL functions that are aimed at helping us improve our experience in working with dates.
@@ -237,3 +238,69 @@ Solution:
     LIMIT 10;
 With CASE you can query for data using multiple conditions ie you can have multiple WHEN/THEN pairs.
 
+
+
+1 .POSITION takes a character and a column, and provides the index where that character is for each row.
+The index of the first position is 1 in SQL. If you come from another programming language, many begin
+indexing at 0. Here, you saw that you can pull the index of a comma as POSITION(',' IN city_state).
+
+
+2. STRPOS provides the same result as POSITION, but the syntax for achieving those results is a bit
+different as shown here: STRPOS(city_state, ',').
+Note, both POSITION and STRPOS are case sensitive, so looking for A is different than looking for a. 
+Therefore, if you want to pull an index regardless of the case of a letter, you might want to use 
+LOWER or UPPER to make all of the characters lower or uppercase.
+
+
+CONCAT and Piping ||
+Each of these will allow you to combine columns together across rows. For example 
+first and last names stored in separate columns could be combined together to create a full name: 
+1. CONCAT => CONCAT(first_name, ' ', last_name) 
+2. piping => first_name || ' ' || last_name.
+
+
+CASTING
+1. TO_DATE
+2. CAST
+3. Casting with ::
+DATE_PART('month', TO_DATE(month, 'month')) here changed a month name into the number associated with
+that particular month.
+eg. To convert May to a number, May can be replaced with a column to support dynamic data.
+/*
+    SELECT DATE_PART('month', TO_DATE('May', 'month'))
+*/
+
+Convert month to a number, concat with day and year to get a date string, convert date string into sql date.
+Get the day of the week from this date.
+/* SELECT DATE_PART('dow',
+                    CAST(CONCAT(DATE_PART('month', TO_DATE('May', 'month')), '-9', '-1994') AS date))
+*/
+
+
+Then you can change a string to a date using CAST. CAST is actually useful to change lots of column types.
+Commonly you might be doing as you saw here, where you change a string to a date using CAST(date_column AS DATE).
+However, you might want to make other changes to your columns in terms of their data types.
+You can see other examples http://www.postgresqltutorial.com/postgresql-cast/
+
+In this example, you also saw that instead of CAST(date_column AS DATE), you can use date_column::DATE.
+
+These 3 functions are specific to strings. They won’t work with dates, integers or floating-point numbers.
+However, using any of these functions will automatically change the data to the appropriate type.
+
+LEFT, RIGHT, and TRIM are all used to select only certain elements of strings, but using them to select elements
+of a number or date will treat them as strings for the purpose of the function. Though we didnot cover TRIM in this
+lesson explicitly, it can be used to remove characters from the beginning and end of a string. This can remove
+unwanted spaces at the beginning or end of a row that often happen with data being moved from Excel or other storage systems.
+
+There are a number of variations of these functions, as well as several other string functions not covered here.
+Different databases use subtle variations on these functions, so be sure to look up the appropriate database’s syntax if you’re
+connected to a private database.
+The Postgres literature contains a lot of the related functions. (https://www.postgresql.org/docs/9.1/static/functions-string.html)
+
+1. COALESCE
+Used to work with NULL values. Used to specify the the value to substitute null values in a query. For example, to replace null with 0
+SELECT COALESCE(column, 0)
+
+Extra material
+1. https://www.w3schools.com/sql/sql_isnull.asp
+2. https://community.modeanalytics.com/sql/tutorial/sql-string-functions-for-cleaning/
